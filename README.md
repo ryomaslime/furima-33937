@@ -59,7 +59,7 @@
 | house_number  | string | null: false|
 | building_name  | string |
 | telephone | string | null: false|
-| purchase | references | null: false, foreign_key: true|
+| purchase | references | null: false, ＠foreign_key: true|
 
 ### Association
 - belongs_to :purchase
