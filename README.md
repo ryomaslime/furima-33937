@@ -60,6 +60,4 @@
 | purchase | references | null: false| foreign_key: true|
 
 ### Association
-- belongs_to :user
-- belongs_to :item
 - belongs_to :purchase
