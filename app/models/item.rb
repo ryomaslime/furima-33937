@@ -6,6 +6,7 @@ class Item < ApplicationRecord
   belongs_to :area
   belongs_to :duration
   belongs_to :user
+  has_one :purchase
   
   has_one_attached :image
 
