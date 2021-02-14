@@ -1,6 +1,6 @@
 class PurchasesController < ApplicationController
   before_action :authenticate_user!, only: [:index, :create]
-  before_action :move_to_index, only: [:index]
+  before_action :move_to_index, only: [:index, :create]
   before_action :sold_item, only: [:index]
 
   def index
@@ -24,25 +24,33 @@ class PurchasesController < ApplicationController
     params.require(:purchase_address).permit(:postal_code, :area_id, :city, :house_number, :building_name, :telephone).merge(user_id: current_user.id, item_id: params[:item_id], token: params[:token])
   end
 
-
   def move_to_index
-    @product = Item.find(params[:item_id])
-    if current_user.id == @product.user.id
-      redirect_to root_path
+    product
+    if @product.user.id == current_user.id
+      redirect
     end
   end
 
   def sold_item
-    @product = Item.find(params[:item_id])
+    product
     if @product.purchase
-      redirect_to root_path
+      redirect
     end
   end
 
+  def product
+    @product = Item.find(params[:item_id])
+  end
+
+  def redirect
+    redirect_to root_path
+  end
+
   def pay_item
+    product
     Payjp.api_key = ENV["PAYJP_SECRET_KEY"]  
     Payjp::Charge.create(
-        amount: Item.find(params[:item_id]).price,
+        amount: @product.price,
         card: purchase_address_params[:token],
         currency: 'jpy'
     )
